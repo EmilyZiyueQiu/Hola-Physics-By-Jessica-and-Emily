@@ -1,4 +1,5 @@
-let img;
+
+let startGame;
 
 function preload() {
   img = loadImage('assets/bg1.jpg');
@@ -8,16 +9,22 @@ function preload() {
   planet2=loadImage("assets/planet2.png")
   planet3=loadImage("assets/planet3.png")
   planet4=loadImage("assets/planet4.png")
+  startGame=loadImage("assets/start.png")
+
 
 }
 function setup() {
   createCanvas(windowWidth,windowHeight);
+  widthOfStart=100;
+  heightOfStart=40;
 
 }
 
 function draw(){
   background(15,22,26);
   image(img, (windowWidth-888)/2, (windowHeight-592)/2,888,592);
+
+  console.log(mouseX,mouseY);
 
   if (frameCount%100<=50){
     image(titlePhysics,(windowWidth-846)/2+53,windowHeight/2-80);
@@ -53,8 +60,13 @@ function draw(){
   rotate(frameCount * PI / 270);
   image(planet4, -150, -150,220,220);
   pop();
-
-
-
   
+  //start button
+  if (mouseX>=640 && mouseX<=770 && mouseY>=515 && mouseY<=540){
+    image(startGame,600,475,700,100);
+    cursor(HAND);
+  }else{
+    image(startGame,620,480,500,80); 
+    cursor(ARROW);
+  }
 }
