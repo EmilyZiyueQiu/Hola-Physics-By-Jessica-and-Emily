@@ -1,0 +1,37 @@
+body {
+    margin: 0;
+}
+
+#gravity{
+    width: 60px;
+    height:30px;
+    font-size: 12px;
+    top: 460px;
+    left: 20px;
+    position: absolute;
+    background-color: #ff5bb0;
+    color:#ffffff;
+    font-family: Chalkduster, fantasy;
+    border-radius:6px;
+    border:1px solid #ee1eb5;
+    cursor:pointer;
+    box-shadow:inset 0px 1px 0px 0px #fbafe3;
+    text-shadow:0px 1px 0px #c70067;
+}
+
+#water{
+    width: 60px;
+    height:30px;
+    font-size: 15px;
+    top: 460px;
+    left: 90px;
+    position: absolute;
+    background-color: #ff5bb0;
+    color:#ffffff;
+    font-family: Chalkduster, fantasy;
+    border-radius:6px;
+    border:1px solid #ee1eb5;
+    cursor:pointer;
+    box-shadow:inset 0px 1px 0px 0px #fbafe3;
+    text-shadow:0px 1px 0px #c70067;
+}
