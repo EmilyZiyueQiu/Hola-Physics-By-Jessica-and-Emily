@@ -1,227 +1,60 @@
-// Demonstration of multiple force acting on
-// bodies (Mover class)
-// Bodies experience gravity continuously
-// Bodies experience fluid resistance when in "water"
+let img;
 
-// Five moving bodies
-let movers = [];
+function preload() {
+  img = loadImage('assets/bg1.jpg');
+  titlePhysics=loadImage("assets/title.png")
+  titleHola=loadImage("assets/title2.png")
+  planet1=loadImage("assets/planet1.png")
+  planet2=loadImage("assets/planet2.png")
+  planet3=loadImage("assets/planet3.png")
+  planet4=loadImage("assets/planet4.png")
 
-// Liquid
-let liquid;
-
-var water=false;
-var gra= false;
-
+}
 function setup() {
-  createCanvas(640, 360);
-  reset();
-  // Create liquid object
-  liquid = new Liquid(0, height / 2, width, height / 2, 0.1);
+  createCanvas(windowWidth,windowHeight);
+
 }
 
-function draw() {
-  background("#CCFFFF");
-  if (water==true){
-      // Draw water
-      liquid.display();
+function draw(){
+  background(15,22,26);
+  image(img, (windowWidth-888)/2, (windowHeight-592)/2,888,592);
 
-      for (let i = 0; i < movers.length; i++) {
-    
-        // Is the Mover in the liquid?
-        if (liquid.contains(movers[i])) {
-          // Calculate drag force
-          let dragForce = liquid.calculateDrag(movers[i]);
-          // Apply drag force to Mover
-          movers[i].applyForce(dragForce);
-        }
-    
-        // Gravity is scaled by mass here!
-        let gravity = createVector(0, 0.1 * movers[i].mass);
-        // Apply gravity
-        movers[i].applyForce(gravity);
-    
-        // Update and display
-        movers[i].update();
-        movers[i].display();
-        movers[i].checkEdges();
-      }
-    }
-
-    if (gra==true){
-
-  for (var i = 0; i < movers.length; i++) {
-    
-    // Gravity is scaled by mass here!
-    var gravity = createVector(0, 0.1*movers[i].mass);
-    // Apply gravity
-    movers[i].applyForce(gravity);
-   
-    // Update and display
-    movers[i].update();
-    movers[i].display();
-    movers[i].checkEdges();
+  if (frameCount%100<=50){
+    image(titlePhysics,(windowWidth-846)/2+53,windowHeight/2-80);
+  }else{
+    image(titleHola,(windowWidth-846)/2+50,windowHeight/2-80);
   }
-    }
 
+  //planet1
+  push();
+  translate(150,150);
+  rotate(frameCount * PI / 270);
+  image(planet1, -50, -50,180,180);
+  pop();
 
+  //planet3
+  push();
+  translate(200,200);
+  rotate(-frameCount * PI / 180);
+  image(planet3, -200, -200,180,180);
+  pop();
 
-}
-
-function gravity(){
-  gra=true;
-  water=false;
-  reset2();
-
-}
-
-function waterResistance(){
-  water=true;
-  gra=false;
-  reset();
-
-}
-
-
-
-// Restart all the Mover objects randomly
-function reset() {
-  for (let i = 0; i < 9; i++) {
-    movers[i] = new Mover(random(0.5, 3), 40 + i * 70, 0);
-  }
-}
-
-let Liquid = function(x, y, w, h, c) {
-  this.x = x;
-  this.y = y;
-  this.w = w;
-  this.h = h;
-  this.c = c;
-};
-
-// Is the Mover in the Liquid?
-Liquid.prototype.contains = function(m) {
-  let l = m.position;
-  return l.x > this.x && l.x < this.x + this.w &&
-         l.y > this.y && l.y < this.y + this.h;
-};
-
-// Calculate drag force
-Liquid.prototype.calculateDrag = function(m) {
-  // Magnitude is coefficient * speed squared
-  let speed = m.velocity.mag();
-  let dragMagnitude = this.c * speed * speed;
-
-  // Direction is inverse of velocity
-  let dragForce = m.velocity.copy();
-  dragForce.mult(-1);
-
-  // Scale according to magnitude
-  // dragForce.setMag(dragMagnitude);
-  dragForce.normalize();
-  dragForce.mult(dragMagnitude);
-  return dragForce;
-};
-
-Liquid.prototype.display = function() {
-  noStroke();
-  fill("#1441D5");
-  rect(this.x, this.y, this.w, this.h);
-};
-
-function Mover(m, x, y) {
-  this.mass = m;
-  this.position = createVector(x, y);
-  this.velocity = createVector(0, 0);
-  this.acceleration = createVector(0, 0);
-}
-
-// Newton's 2nd law: F = M * A
-// or A = F / M
-Mover.prototype.applyForce = function(force) {
-  let f = p5.Vector.div(force, this.mass);
-  this.acceleration.add(f);
-};
-
-Mover.prototype.update = function() {
-  // Velocity changes according to acceleration
-  this.velocity.add(this.acceleration);
-  // position changes by velocity
-  this.position.add(this.velocity);
-  // We must clear acceleration each frame
-  this.acceleration.mult(0);
-};
-
-Mover.prototype.display = function() {
-  stroke(0);
-  strokeWeight(0);
-  fill("#FF99CC");
-  ellipse(this.position.x, this.position.y, this.mass * 16, this.mass * 16);
-};
-
-// Bounce off bottom of window
-Mover.prototype.checkEdges = function() {
-  if (this.position.y > (height - this.mass * 8)) {
-    // A little dampening when hitting the bottom
-    this.velocity.y *= -0.9;
-    this.position.y = (height - this.mass * 8);
-  }
-};
-
-
-
-
-//gravity
-function reset2() {
-  for (var i = 0; i < 9; i++) {
-    movers[i] = new Ball(random(0.5, 3), 40+i*70, 0);
-  }
-}
-
-
-function Ball(m,x,y) {
-  this.mass = m;
-  this.position = createVector(x,y);
-  this.velocity = createVector(0,0);
-  this.acceleration = createVector(0,0);
-}
-
-// Newton's 2nd law: F = M * A
-// or A = F / M
-Ball.prototype.applyForce = function(force) {
-  var f = p5.Vector.div(force,this.mass);
-  this.acceleration.add(f);
-};
   
-Ball.prototype.update = function() {
-  // Velocity changes according to acceleration
-  this.velocity.add(this.acceleration);
-  // position changes by velocity
-  this.position.add(this.velocity);
-  // We must clear acceleration each frame
-  this.acceleration.mult(0);
-};
+  //planet2
+  push();
+  translate(1300,700);
+  rotate(frameCount * PI / 270);
+  image(planet2, -150, -150,300,300);
+  pop();
 
-Ball.prototype.display = function() {
-  stroke(0);
-  strokeWeight(0);
-  fill("#FF99CC");
-  ellipse(this.position.x,this.position.y,this.mass*16,this.mass*16);
-};
-
-// Bounce off bottom of window
-Ball.prototype.checkEdges = function() {
-  if (this.position.y > (height - this.mass*8)) {
-    // A little dampening when hitting the bottom
-    this.velocity.y *= -0.9;
-    this.position.y = (height - this.mass*8);
-  }
-};
+  //planet4
+  push();
+  translate(1300,700);
+  rotate(frameCount * PI / 270);
+  image(planet4, -150, -150,220,220);
+  pop();
 
 
 
-
-
-
-
-
-
+  
+}
