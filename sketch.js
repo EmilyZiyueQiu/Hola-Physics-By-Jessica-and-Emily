@@ -33,6 +33,7 @@ function preload() {
   q1 = loadImage("assets/q1.png");
   q2 = loadImage("assets/q2.png");
   q3 = loadImage("assets/q3.png");
+  q4 = loadImage("assets/q4.png");
   titleFFL = loadImage("assets/titleFFL.png");
   titleE = loadImage("assets/titleE.png");
   titleB = loadImage("assets/titleB.png");
@@ -69,6 +70,10 @@ function draw() {
     pageSix();
   } else if (currentPage == 7) {
     pageSeven();
+  }else if (currentPage == 8) {
+    pageEight();
+  }else if (currentPage == 9) {
+    pageNine();
   }
 }
 
@@ -311,8 +316,6 @@ function pageSix() {
   if (mouseX >= 870 && mouseX <= 1200 && mouseY >= 600 && mouseY <= 670) {
     cursor(HAND);
   }
-
-
 }
 
 
@@ -346,6 +349,39 @@ function pageSeven() {
 
 }
 
+
+
+function pageEight() {
+  //bg and title
+  image(bg1, 0, 0, windowWidth, windowHeight);
+  image(titleB, 150, 90);
+
+  //explanation
+  textSize(25);
+  textStyle(BOLD);
+  textFont('Helvetica');
+  fill("#CC99FF");
+
+
+  text("As you observe, the balls fall at the same speed before they diving into the water,", 200, 240);
+  text("but once they enter the water, their speed differs based on their sizes.", 200, 280);
+  text("So the force here is called Buoyancy! The force that enables us to swim!", 200, 320);
+  text("The co-effect of gravity and buoyancy creates the phenomenon we observe, ", 200, 360);
+  text("and if you want to feel it? JUST GO SWIMMING NOW!", 200, 400);
+
+
+  //next Button
+  image(nextButton, 900 + 50 * sin(frameCount * PI / 90), 600, 290, 70);
+  if (mouseX >= 870 && mouseX <= 1200 && mouseY >= 600 && mouseY <= 670) {
+    cursor(HAND);
+  }
+}
+
+function pageNine() {
+  //bg and title
+  image(bg1, 0, 0, windowWidth, windowHeight);
+  image(q4, 150, 90);
+}
 
 
 function mouseClicked() {
@@ -399,6 +435,11 @@ function mouseClicked() {
       reset2();
     } 
   }
+  else if (currentPage == 8) {
+    if (mouseX >= 870 && mouseX <= 1200 && mouseY >= 600 && mouseY <= 670) {
+      currentPage = 9;
+    }
+  } 
 }
 
 function freeFallLaw() {
