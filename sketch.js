@@ -45,7 +45,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   widthOfStart = 100;
   heightOfStart = 40;
-  currentPage = 7;
+  currentPage = 1;
 
   liquid = new Liquid(200, 350*1.5, 600, 350/2, 0.1);
 
