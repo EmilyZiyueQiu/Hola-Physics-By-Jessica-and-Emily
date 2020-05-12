@@ -10,7 +10,7 @@ let aforq1=true;
 
 //Free fall law
 let movers = [];
-fallingHeight=300;
+
 
 
 
@@ -29,6 +29,7 @@ function preload() {
   nextButton=loadImage("assets/nextButton.png");
   watchButton=loadImage("assets/watch.png");
   q1=loadImage("assets/q1.png");
+  q2=loadImage("assets/q2.png");
   titleFFL=loadImage("assets/titleFFL.png");
 
 
@@ -38,7 +39,7 @@ function setup() {
   createCanvas(windowWidth,windowHeight);
   widthOfStart=100;
   heightOfStart=40;
-  currentPage=4;
+  currentPage=5;
 
 
 
@@ -56,6 +57,8 @@ function draw(){
     pageThree();
   }else if (currentPage==4){
     pageFour();
+  }else if (currentPage==5){
+    pageFive();
   }
 }
 
@@ -223,7 +226,7 @@ function pageFour(){
       text("Wow! Cool! Well done! Yes, you are right! In an airless environment on Earth,",200,240);
     }
     text("no matter how different do these two balls weight, they will fall at the same speed!",200,280);
-    text("This is called the Free Fall Law discovered by Galileo！",200,320);
+    text("The only force the ball have is GRAVITY. This is called the Free Fall Law！",200,320);
 
     //free fall law demonstration
     freeFallLaw();
@@ -241,6 +244,37 @@ function pageFour(){
   }
     
     
+}
+
+
+
+function pageFive(){
+  //bg and title
+  image(bg1,0,0,windowWidth,windowHeight);
+  image(q2,150,90);
+
+   //questions
+   textSize(32);
+   textStyle(BOLD);
+   textFont('Helvetica');
+   fill("#F6A4C5");
+   text("But you may be curious now, why in daily life we see some balls will",200,240);
+   text("bounce back to very high while some do not? Why they don't bounce identically?",200,300);
+
+   boucingBall();
+
+    //next Button
+  image(nextButton,900+50*sin(frameCount * PI / 90),600,290,70);
+  if (mouseX>=870 && mouseX<=1200 && mouseY>=600 && mouseY<=670){
+    cursor(HAND);
+  }
+
+    //watch Button
+  image(watchButton,900-50*sin(frameCount * PI / 90),500,340,70);
+  if (mouseX>=870 && mouseX<=1200 && mouseY>=500 && mouseY<=570){
+    cursor(HAND);
+  }
+
 }
 
 
@@ -269,9 +303,17 @@ function mouseClicked(){
   }
   else if (currentPage==4){
     if (mouseX>=870 && mouseX<=1200 && mouseY>=500 && mouseY<=570){
-      window.location.reload();
+      freeFallLaw();
+
     } else if (mouseX>=870 && mouseX<=1200 && mouseY>=600 && mouseY<=670){
       currentPage=5;
+    }
+  }else if (currentPage==5){
+    if (mouseX>=870 && mouseX<=1200 && mouseY>=500 && mouseY<=570){
+      reset1();
+
+    } else if (mouseX>=870 && mouseX<=1200 && mouseY>=600 && mouseY<=670){
+      currentPage=6;
     }
   }
 }
@@ -284,24 +326,20 @@ function freeFallLaw(){
     
     fill("#FF99CC");
     
-    if (fallingHeight<=670){
-    fallingHeight = 300 + 400 * (Math.sin(frameCount/120))
+  
+    fallingHeight = 300 + 200 * Math.abs(frameCount/120)%400;
     ellipse(300,fallingHeight,30,30);
     ellipse(600,fallingHeight,80,80);
-    }else{
-      ellipse(300,670,30,30);
-      ellipse(600,670,80,80);
-    }
-
-
 
 }
 
-function resistance(){
-  //frame
-  noStroke();
-  fill("#CCE5FF");
-  rect(200,350,600,350);
+
+function boucingBall(){
+    //frame
+    noStroke();
+    fill("#CCE5FF");
+    rect(200,350,600,350);
+
   for (var i = 0; i < movers.length; i++) {
     
     // Gravity is scaled by mass here!
@@ -314,21 +352,24 @@ function resistance(){
     movers[i].display();
     movers[i].checkEdges();
   }
-
 }
+
 
 function reset1() {
   for (var i = 0; i < 9; i++) {
-    movers[i] = new Ball(random(0.5, 3), 40+i*70, 0);
+    movers[i] = new Ball(random(0.5, 4), 220+i*70, 350);
   }
 }
 
 
 function Ball(m,x,y) {
+  push();
+  translate(200,350);
   this.mass = m;
   this.position = createVector(x,y);
   this.velocity = createVector(0,0);
   this.acceleration = createVector(0,0);
+  pop();
 }
 
 // Newton's 2nd law: F = M * A
@@ -356,9 +397,9 @@ Ball.prototype.display = function() {
 
 // Bounce off bottom of window
 Ball.prototype.checkEdges = function() {
-  if (this.position.y > (height - this.mass*8)) {
+  if (this.position.y > (700 - this.mass*8)) {
     // A little dampening when hitting the bottom
     this.velocity.y *= -0.9;
-    this.position.y = (height - this.mass*8);
+    this.position.y = (700- this.mass*8);
   }
 };
