@@ -7,6 +7,14 @@ let maxHeight2=480;
 
 let aforq1=true;
 
+
+//Free fall law
+let movers = [];
+fallingHeight=300;
+
+
+
+
 function preload() {
   bg1 = loadImage('assets/bg1.jpg');
   bg2 = loadImage('assets/bg2.jpg');
@@ -19,7 +27,9 @@ function preload() {
   startGame=loadImage("assets/start.png");
   titleWelcome=loadImage("assets/welcomeTitle.png");
   nextButton=loadImage("assets/nextButton.png");
+  watchButton=loadImage("assets/watch.png");
   q1=loadImage("assets/q1.png");
+  titleFFL=loadImage("assets/titleFFL.png");
 
 
 
@@ -28,7 +38,9 @@ function setup() {
   createCanvas(windowWidth,windowHeight);
   widthOfStart=100;
   heightOfStart=40;
-  currentPage=3;
+  currentPage=4;
+
+
 
 }
 
@@ -196,7 +208,39 @@ function pageThree(){
 function pageFour(){
     //bg and title
     image(bg1,0,0,windowWidth,windowHeight);
-    image(q1,150,90);
+    image(titleFFL,150,90);
+
+    //explanation
+    textSize(25);
+    textStyle(BOLD);
+    textFont('Helvetica');
+    fill("#CC99FF");
+
+    if (aforq1==false){
+    text("Nice guess! But the fact may suprise you -- in an airless environment on Earth,",200,240);
+    }
+    else{
+      text("Wow! Cool! Well done! Yes, you are right! In an airless environment on Earth,",200,240);
+    }
+    text("no matter how different do these two balls weight, they will fall at the same speed!",200,280);
+    text("This is called the Free Fall Law discovered by Galileo！",200,320);
+
+    //free fall law demonstration
+    freeFallLaw();
+
+    //next Button
+  image(nextButton,900+50*sin(frameCount * PI / 90),600,290,70);
+  if (mouseX>=870 && mouseX<=1200 && mouseY>=600 && mouseY<=670){
+    cursor(HAND);
+  }
+
+    //watch Button
+  image(watchButton,900-50*sin(frameCount * PI / 90),500,340,70);
+  if (mouseX>=870 && mouseX<=1200 && mouseY>=500 && mouseY<=570){
+    cursor(HAND);
+  }
+    
+    
 }
 
 
@@ -223,4 +267,98 @@ function mouseClicked(){
       aforq1=true;
     }
   }
+  else if (currentPage==4){
+    if (mouseX>=870 && mouseX<=1200 && mouseY>=500 && mouseY<=570){
+      window.location.reload();
+    } else if (mouseX>=870 && mouseX<=1200 && mouseY>=600 && mouseY<=670){
+      currentPage=5;
+    }
+  }
 }
+
+function freeFallLaw(){
+    //frame
+    noStroke();
+    fill("#CCE5FF");
+    rect(200,350,600,350);
+    
+    fill("#FF99CC");
+    
+    if (fallingHeight<=670){
+    fallingHeight = 300 + 400 * (Math.sin(frameCount/120))
+    ellipse(300,fallingHeight,30,30);
+    ellipse(600,fallingHeight,80,80);
+    }else{
+      ellipse(300,670,30,30);
+      ellipse(600,670,80,80);
+    }
+
+
+
+}
+
+function resistance(){
+  //frame
+  noStroke();
+  fill("#CCE5FF");
+  rect(200,350,600,350);
+  for (var i = 0; i < movers.length; i++) {
+    
+    // Gravity is scaled by mass here!
+    var gravity = createVector(0, 0.1*movers[i].mass);
+    // Apply gravity
+    movers[i].applyForce(gravity);
+   
+    // Update and display
+    movers[i].update();
+    movers[i].display();
+    movers[i].checkEdges();
+  }
+
+}
+
+function reset1() {
+  for (var i = 0; i < 9; i++) {
+    movers[i] = new Ball(random(0.5, 3), 40+i*70, 0);
+  }
+}
+
+
+function Ball(m,x,y) {
+  this.mass = m;
+  this.position = createVector(x,y);
+  this.velocity = createVector(0,0);
+  this.acceleration = createVector(0,0);
+}
+
+// Newton's 2nd law: F = M * A
+// or A = F / M
+Ball.prototype.applyForce = function(force) {
+  var f = p5.Vector.div(force,this.mass);
+  this.acceleration.add(f);
+};
+  
+Ball.prototype.update = function() {
+  // Velocity changes according to acceleration
+  this.velocity.add(this.acceleration);
+  // position changes by velocity
+  this.position.add(this.velocity);
+  // We must clear acceleration each frame
+  this.acceleration.mult(0);
+};
+
+Ball.prototype.display = function() {
+  stroke(0);
+  strokeWeight(0);
+  fill("#FF99CC");
+  ellipse(this.position.x,this.position.y,this.mass*16,this.mass*16);
+};
+
+// Bounce off bottom of window
+Ball.prototype.checkEdges = function() {
+  if (this.position.y > (height - this.mass*8)) {
+    // A little dampening when hitting the bottom
+    this.velocity.y *= -0.9;
+    this.position.y = (height - this.mass*8);
+  }
+};
