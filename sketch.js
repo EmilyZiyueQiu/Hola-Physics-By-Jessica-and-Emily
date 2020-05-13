@@ -408,13 +408,16 @@ function pageTen() {
   //bg and title
   image(bg1, 0, 0, windowWidth, windowHeight);
   image(titleG, 150, 90);
-
+  //image(attractiondef, 0, 0, windowWidth/2, windowHeight/2);
   //explanation
   textSize(25);
   textStyle(BOLD);
   textFont('Helvetica');
   fill("#CC99FF");
-  text("The force of attraction between all masses in the universe",200,240)
+  text("Gravity--The force of attraction between all masses in the universe",200,240);
+  text("Gravity is what holds the planets in orbit around the sun and ", 200, 280);
+  text("what keeps the moon in orbit around Earth.  ", 200, 320);
+  
   
   
   //next Button
@@ -702,7 +705,7 @@ Mover.prototype.checkEdges = function () {
 function attraction(){
   noStroke();
   fill("#1C2833");
-  //rect(300, 300, 600, 350);
+  rect(300, 300, 600, 350);
 
   var force = attractor.calculateAttraction(star);
   star.applyForce(force);
