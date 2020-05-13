@@ -7,10 +7,7 @@ let numPlanets = 3;
 function setup() {
   createCanvas(1300, 700,WEBGL);
   createEasyCam();
- // button=createButton();
-  //button.position(100,100);
-  //button.mousePressed(draw)
-  //sphereMode(CENTER);
+
   angleMode(DEGREES);
   
   for (i = 0; i < numPlanets; i++) {
@@ -23,10 +20,14 @@ function draw() {
   background(0);
   
   normalMaterial();
+  ambientLight(60, 60, 60);
   pointLight(1000,1000,1000,0,0,255);
   push();
-  translate(0,0,-200);
-  sphere (50);//sun
+  translate(0,0,269);
+  console.log("mouseX"+mouseX);
+  console.log("mouseY"+mouseY);
+  //fill(255)
+  sphere (35);//sun
   pop();
 
   for (i = 0; i < numPlanets; i++) {
@@ -53,7 +54,7 @@ class Planets {
     rotateY(this.angle);
     
     this.angle = this.angle + this.orbitSpeed
-    fill(255, 0, 0);
+    fill(200);
     translate(this.distance, 0,0);
     sphere( this.radius);
      //pop()
