@@ -14,6 +14,8 @@ let movers = [];
 //buoyancy
 let liquid;
 
+let attractor;
+let star;
 
 
 
@@ -48,6 +50,8 @@ function setup() {
   currentPage = 1;
 
   liquid = new Liquid(200, 350*1.5, 600, 350/2, 0.1);
+   star = new Movers();
+   attractor = new Attractor();
 
 
 }
@@ -74,6 +78,8 @@ function draw() {
     pageEight();
   }else if (currentPage == 9) {
     pageNine();
+  }else if  (currentPage == 10) {
+    pageTen();
   }
 }
 
@@ -369,7 +375,7 @@ function pageEight() {
   text("The co-effect of gravity and buoyancy creates the phenomenon we observe, ", 200, 360);
   text("and if you want to feel it? JUST GO SWIMMING NOW!", 200, 400);
 
-
+   
   //next Button
   image(nextButton, 900 + 50 * sin(frameCount * PI / 90), 600, 290, 70);
   if (mouseX >= 870 && mouseX <= 1200 && mouseY >= 600 && mouseY <= 670) {
@@ -381,6 +387,41 @@ function pageNine() {
   //bg and title
   image(bg1, 0, 0, windowWidth, windowHeight);
   image(q4, 150, 90);
+
+  //explanation
+  textSize(25);
+  textStyle(BOLD);
+  textFont('Helvetica');
+  fill("#CC99FF");
+  text("Try to guess what is this force?",200,240)
+  attraction();
+  
+  //next Button
+  image(nextButton, 900 + 50 * sin(frameCount * PI / 90), 600, 290, 70);
+  if (mouseX >= 870 && mouseX <= 1200 && mouseY >= 600 && mouseY <= 670) {
+    cursor(HAND);
+  }
+  
+}
+function pageTen() {
+  //bg and title
+  image(bg1, 0, 0, windowWidth, windowHeight);
+  image(q4, 150, 90);
+
+  //explanation
+  textSize(25);
+  textStyle(BOLD);
+  textFont('Helvetica');
+  fill("#CC99FF");
+  text("The force of attraction between all masses in the universe",200,240)
+  
+  
+  //next Button
+  image(nextButton, 900 + 50 * sin(frameCount * PI / 90), 600, 290, 70);
+  if (mouseX >= 870 && mouseX <= 1200 && mouseY >= 600 && mouseY <= 670) {
+    cursor(HAND);
+  }
+  
 }
 
 
@@ -439,7 +480,16 @@ function mouseClicked() {
     if (mouseX >= 870 && mouseX <= 1200 && mouseY >= 600 && mouseY <= 670) {
       currentPage = 9;
     }
-  } 
+  }
+  else if (currentPage == 9) {
+    if (mouseX >= 870 && mouseX <= 1200 && mouseY >= 600 && mouseY <= 670) {
+      currentPage = 10;
+    }
+  }else if (currentPage == 10) {
+    if (mouseX >= 870 && mouseX <= 1200 && mouseY >= 600 && mouseY <= 670) {
+      location.replace("./index2.html");
+    }
+  }
 }
 
 function freeFallLaw() {
@@ -648,3 +698,100 @@ Mover.prototype.checkEdges = function () {
     this.position.y = (700 - this.mass * 8);
   }
 };
+function attraction(){
+  noStroke();
+  fill("#1C2833");
+  //rect(300, 300, 600, 350);
+
+  var force = attractor.calculateAttraction(star);
+  star.applyForce(force);
+  star.update();
+ 
+  attractor.display();
+  star.display();
+}
+
+class Attractor {
+  constructor(){
+    this.position = new p5.Vector(500, 370);
+    this.mass = 20;
+    this.G = 1;
+    this.dragOffset = new p5.Vector(0, 0);
+    this.dragging = false;
+    this.rollover = false;
+  }
+
+
+ calculateAttraction(star) {
+    // Calculate direction of force
+    var force = p5.Vector.sub(this.position, star.position);
+    // Distance between objects       
+    var distance = force.mag();
+    // Limiting the distance to eliminate "extreme" results
+    // for very close or very far objects                            
+    distance = constrain(distance, 5, 25);
+    // Normalize vector                    
+    force.normalize();
+    // Calculate gravitional force magnitude  
+    var strength = (this.G * this.mass * movers.mass) / (distance * distance);
+    // Get force vector --> magnitude * direction
+    force.mult(strength);
+    return force;
+};
+
+// Method to display
+display () {
+    ellipseMode(CENTER);
+    strokeWeight(4);
+    stroke(0);
+   
+        fill("#F7DC6F ");
+    
+    ellipse(this.position.x, this.position.y, this.mass*1.5);
+};
+
+// The methods below are for mouse interaction
+  
+
+}
+
+class Movers{
+  constructor(){
+    this.position = new p5.Vector(400, 50);
+    this.velocity = new p5.Vector(1, 0);
+    this.acceleration = new p5.Vector(0, 0);
+    this.mass = 1;
+  }
+
+  
+applyForce (force) {
+    var f = p5.Vector.div(force,this.mass);
+    this.acceleration.add(f);
+};
+  
+update() {
+    this.velocity.add(this.acceleration);
+    this.position.add(this.velocity);
+    this.acceleration.mult(0);
+};
+display() {
+    stroke(0);
+    strokeWeight(2);
+    fill(245, 183, 177 , 200);
+    ellipse(this.position.x, this.position.y, this.mass*16, this.mass*16);
+};
+checkEdges () {
+    if (this.position.x > width) {
+        this.position.x = width;
+        this.velocity.x *= -1;
+    } else if (this.position.x < 0) {
+        this.velocity.x *= -1;
+        this.position.x = 0;
+    }
+    if (this.position.y > height) {
+        this.velocity.y *= -1;
+        this.position.y = height;
+    }
+};
+}
+
