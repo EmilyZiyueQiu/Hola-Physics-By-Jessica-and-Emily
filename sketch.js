@@ -39,6 +39,7 @@ function preload() {
   titleFFL = loadImage("assets/titleFFL.png");
   titleE = loadImage("assets/titleE.png");
   titleB = loadImage("assets/titleB.png");
+  titleG=loadImage("assets/titleg.png");
 
 
 
@@ -406,7 +407,7 @@ function pageNine() {
 function pageTen() {
   //bg and title
   image(bg1, 0, 0, windowWidth, windowHeight);
-  image(q4, 150, 90);
+  image(titleG, 150, 90);
 
   //explanation
   textSize(25);
